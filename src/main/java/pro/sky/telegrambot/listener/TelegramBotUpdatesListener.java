@@ -53,7 +53,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 String item = matcher.group(3);
                 LocalDateTime time = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
                 Notification notification = new Notification(update.message().chat().id(), item, time);
-//                add(matcher, update.message().chat().id());
+                add(matcher, update.message().chat().id());
                 SendMessage message = new SendMessage(update.message().chat().id(), notification.toString());
                 SendResponse response = telegramBot.execute(message);
             }
@@ -66,7 +66,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         String item = matcher.group(3);
         LocalDateTime time = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
         return notificationRepository.save(new Notification(chatId, item, time));
-
     }
 
 
