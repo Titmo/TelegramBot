@@ -30,14 +30,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     public int process(List<Update> updates) {
         updates.forEach(update -> {
             logger.info("Processing update: {}", update);
-            if (update!=(null)) {
-                String messageText = update.message().text();
-                if (messageText.equals("/start")) {
+                if (update.message().text().equals("/start")) {
                     long chatId = update.message().chat().id();
                     SendMessage message = new SendMessage(chatId, "hi!");
                     SendResponse response = telegramBot.execute(message);
                 }
-            }
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
