@@ -23,6 +23,10 @@ public class Notification {
         this.time = time;
     }
 
+    public Notification() {
+
+    }
+
     public long getId() {
         return id;
     }

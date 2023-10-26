@@ -15,8 +15,10 @@ import pro.sky.telegrambot.repository.NotificationRepository;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,11 +68,22 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         return notificationRepository.save(new Notification(chatId, item, time));
     }
 
-    @Scheduled(cron = "0 0/1 * * * *")
+    @Scheduled(cron = "*/5 * * * * *")
     public void checkTime() {
         LocalDateTime time = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
-
+        List<LocalDateTime> data = notificationRepository.findAllTime();
+        System.out.println("data = " + data);
+        System.out.println("time = " + time);
+        for (LocalDateTime datum : data) {
+            if (time.isAfter(datum)) {
+                notificationRepository.delete(notificationRepository.findByTime(datum));
+            } else if (time.isEqual(datum)) {
+                Notification notification = notificationRepository.findByTime(datum);
+                SendMessage message = new SendMessage(notification.getChatId(), notification.getNotification());
+                SendResponse response = telegramBot.execute(message);
+            }
+        }
     }
-
-
 }
+//   */1 * * * * *
+//   0 0/1 * * * *
