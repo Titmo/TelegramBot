@@ -68,22 +68,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         return notificationRepository.save(new Notification(chatId, item, time));
     }
 
-    @Scheduled(cron = "*/5 * * * * *")
+    @Scheduled(cron = "0 0/1 * * * *")
     public void checkTime() {
-        LocalDateTime time = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
-        List<LocalDateTime> data = notificationRepository.findAllTime();
-        System.out.println("data = " + data);
-        System.out.println("time = " + time);
-        for (LocalDateTime datum : data) {
-            if (time.isAfter(datum)) {
-                notificationRepository.delete(notificationRepository.findByTime(datum));
-            } else if (time.isEqual(datum)) {
-                Notification notification = notificationRepository.findByTime(datum);
-                SendMessage message = new SendMessage(notification.getChatId(), notification.getNotification());
-                SendResponse response = telegramBot.execute(message);
-            }
+        LocalDateTime localDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+        List<Notification> notification =notificationRepository.findByTime(localDateTime);
+        for (Notification n : notification) {
+            SendMessage message = new SendMessage(n.getChatId(), n.getNotification());
+            SendResponse response = telegramBot.execute(message);
         }
     }
 }
-//   */1 * * * * *
-//   0 0/1 * * * *

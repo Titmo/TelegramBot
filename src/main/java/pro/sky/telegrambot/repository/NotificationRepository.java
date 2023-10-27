@@ -8,9 +8,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification,Long> {
-@Query(value="select n.\"time\" from notification n order by n.\"time\"",nativeQuery = true)
-List<LocalDateTime> sortedTime();
-
-    Notification findByTime(LocalDateTime time);
-    List<LocalDateTime> findAllTime();
+    List<Notification> findByTime(LocalDateTime localDateTime);
 }
